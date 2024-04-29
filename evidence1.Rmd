@@ -8,6 +8,7 @@ reading files
 
 ```{r, echo = FALSE, include = FALSE}
 # libraries needed
+tinytex::install_tinytex(force = TRUE)
 library(Biostrings)
 library(stringi)
 library(seqinr)
