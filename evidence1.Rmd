@@ -7,9 +7,13 @@ output: pdf_document
 reading files
 
 ```{r, echo = FALSE, include = FALSE}
+#if (!require("BiocManager", quietly = TRUE))
+#    install.packages("BiocManager")
 
+#BiocManager::install("Biostrings")
 # libraries needed
 library(stringi)
+library(Biostrings)
 library(seqinr)
 library(ggplot2)
 
@@ -112,16 +116,16 @@ tamanio_gc_df <- data.frame(Secuencia = names(gc_content),
 longitudes_df <- data.frame(Secuencia = names(gc_content),
                             Longitud = c(sizeB16401, sizeBA2752, sizeBA286, sizeEG51, sizeJN1, sizeXBB191, sizeXBB116, sizeXBB23, sizeZETA, sizeALFA))
 
-ggplot(tamanio_gc_df, aes(x = Tamanio, y = GC, color = Secuencia)) +
+plot(ggplot(tamanio_gc_df, aes(x = Tamanio, y = GC, color = Secuencia)) +
   geom_point(size = 3) +
   scale_color_manual(values = colors) +
   labs(title = "Tamaño vs. Contenido de GC",
        x = "Tamaño de la secuencia",
        y = "Contenido de GC (%)",
        color = "Secuencia") +
-  theme(legend.position = "right")
+  theme(legend.position = "right"))
 
-ggplot(longitudes_df, aes(x = Secuencia, y = Longitud, fill = Secuencia)) +
+plot(ggplot(longitudes_df, aes(x = Secuencia, y = Longitud, fill = Secuencia)) +
   geom_bar(stat = "identity") +
   scale_fill_manual(values = colors) +
   labs(title = "Longitud de las secuencias de ADN",
@@ -131,7 +135,7 @@ ggplot(longitudes_df, aes(x = Secuencia, y = Longitud, fill = Secuencia)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   geom_text(aes(label = Longitud), vjust = -0.5, size = 3) +
   scale_color_manual(values = colors) +
-  coord_cartesian(ylim = c(24000, max(longitudes_df$Longitud) * 1.1), clip = "off")
+  coord_cartesian(ylim = c(24000, max(longitudes_df$Longitud) * 1.1), clip = "off"))
 
 
 print("Como conclusion, puedo decir que la tendencia es que cuan más grande es la secuencia, el contendio de GC aumenta, lo cual suena razonable. Sin embargo como toda regla, tiene su excepcion como lo arroja la variante XBB.1.9.1  y la variante BA.2.75.2. Aunado a esto, me gustaria recalcar que las variantes VOI tienden a tener una longitud mayor a las que tienen otra clasificacion asignada por la SIG. ")
