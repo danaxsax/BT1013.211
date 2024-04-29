@@ -1,0 +1,72 @@
+---
+title: "Untitled"
+author: "cyrce salinas"
+date: "2024-04-29"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(Biostrings)
+library(ggplot2)
+library(tidyverse)
+
+# Define file names and sequence names
+file_names <- c("B-1-640-1.fasta", "BA-2-75-2.fasta", "BA-2-86.fasta", "EG-5-1.fasta", "JN-1.fasta",
+                "XBB-1-9-1.fasta", "XBB-1-16.fasta", "XBB-2-3.fasta", "ZETA.fasta", "ALFA.fasta")
+seq_names <- c("B16401", "BA2752", "BA286", "EG51", "JN1", "XBB191", "XBB116", "XBB23", "ZETA", "ALFA")
+
+# Function to read FASTA file and calculate GC percentage
+read_and_calculate_gc <- function(filename) {
+  dna_seq <- DNAString(unlist(read.fasta(file = paste0("src/", filename), as.string = TRUE)))
+  gc_percentage <- sum(letterFrequency(dna_seq, letters = c("G", "C"))) / length(dna_seq) * 100
+  return(gc_percentage)
+}
+
+# Function to calculate sequence length
+calculate_sequence_length <- function(filename) {
+  dna_seq <- DNAString(unlist(read.fasta(file = paste0("src/", filename), as.string = TRUE)))
+  return(length(dna_seq))
+}
+
+# Read FASTA files and calculate GC percentage for each sequence
+gc_content <- sapply(file_names, read_and_calculate_gc)
+
+# Calculate sequence lengths
+sequence_lengths <- sapply(file_names, calculate_sequence_length)
+
+# Create data frame with GC content and sequence lengths
+data <- data.frame(Secuencia = seq_names, Tamanio = sequence_lengths, GC = gc_content)
+
+# Set up the graphics device for arranging plots in a grid
+par(mfrow = c(3, 4))
+
+# Create individual plots for each sequence
+for (i in 1:nrow(data)) {
+  seq <- data[i, "Secuencia"]
+  p <- ggplot(data = data[i, ], aes(x = Tamanio, y = GC)) +
+    geom_point() +
+    labs(title = seq, x = "Tamaño", y = "Contenido de GC (%)") +
+    theme_minimal()
+  print(p)
+}
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

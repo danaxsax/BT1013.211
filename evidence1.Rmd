@@ -1,0 +1,112 @@
+---
+title: "analisis_inicial"
+author: "cyrce salinas"
+date: "2024-04-28"
+output: pdf_document
+---
+reading files
+
+```{r, echo = FALSE, include = FALSE}
+# libraries needed
+library(Biostrings)
+library(stringi)
+library(seqinr)
+library(ggplot2)
+library(ggrepel)
+library(gplots)
+library(tidyverse)
+
+# reading files
+B16401 <-DNAString(unlist(read.fasta(file="src/B-1-640-1.fasta",  as.string = TRUE)))
+BA2752<-DNAString(unlist(read.fasta(file="src/BA-2-75-2.fasta",  as.string = TRUE)))
+BA286<-DNAString(unlist(read.fasta(file="src/BA-2-86.fasta",  as.string = TRUE)))
+EG51<-DNAString(unlist(read.fasta(file="src/EG-5-1.fasta",  as.string = TRUE)))
+JN1<-DNAString(unlist(read.fasta(file="src/JN-1.fasta",  as.string = TRUE)))
+XBB191<-DNAString(unlist(read.fasta(file="src/XBB-1-9-1.fasta",  as.string = TRUE)))
+XBB116<-DNAString(unlist(read.fasta(file="src/XBB-1-16.fasta",  as.string = TRUE)))
+XBB23<-DNAString(unlist(read.fasta(file="src/XBB-2-3.fasta",  as.string = TRUE)))
+ZETA<-DNAString(unlist(read.fasta(file="src/ZETA.fasta",  as.string = TRUE)))
+ALFA<-DNAString(unlist(read.fasta(file="src/ALFA.fasta",  as.string = TRUE)))
+
+#determine sizes
+sizeB16401 <- stri_length(B16401)
+sizeBA2752 <- stri_length(BA2752)
+sizeBA286 <- stri_length(BA286)
+sizeEG51 <- stri_length(EG51)
+sizeJN1 <- stri_length(JN1)
+sizeXBB191 <- stri_length(XBB191)
+sizeXBB116 <- stri_length(XBB116)
+sizeXBB23 <- stri_length(XBB23)
+sizeZETA <- stri_length(ZETA)
+sizeALFA <- stri_length(ALFA)
+
+#calculate gc %
+gc_content <- function(sequence) {
+  dna_sequence <- DNAString(sequence)
+  gc_count <- letterFrequency(dna_sequence, letters = c("G", "C"))
+  gc_percentage <- sum(gc_count) / sum(letterFrequency(dna_sequence, letters = c("G", "C","T","A"))) * 100
+  return(gc_percentage)
+}
+
+sequences <- list(B16401 = B16401, BA2752 = BA2752, BA286 = BA286, EG51 = EG51, JN1 = JN1, XBB191 = XBB191, XBB116 = XBB116, XBB23 = XBB23, ZETA = ZETA, ALFA = ALFA)
+
+gc_content <- lapply(sequences, gc_content)
+
+gcB16401 <- gc_content[["B16401"]]
+gcBA2752 <- gc_content[["BA2752"]]
+gcBA286<- gc_content[["BA286"]]
+gcEG51<-gc_content[["EG51"]]
+gcJN1<-gc_content[["JN1"]]
+gcXBB191<-gc_content[["XBB191"]]
+gcXBB116<-gc_content[["XBB116"]]
+gcXBB23<-gc_content[["XBB23"]]
+gcZETA<-gc_content[["ZETA"]]
+gcALFA<-gc_content[["ALFA"]]
+
+#get complementary strand
+complementB16401<-reverseComplement(B16401)
+complementBA2752<-reverseComplement(BA2752)
+complementBA286<-reverseComplement(BA286)
+complementEG51<-reverseComplement(EG51)
+complementJN1<-reverseComplement(JN1)
+complementXBB191<-reverseComplement(XBB191)
+complementXBB116<-reverseComplement(XBB116)
+complementXBB23<-reverseComplement(XBB23)
+complementZETA<-reverseComplement(ZETA)
+complementALFA<-reverseComplement(ALFA)
+
+#graphs
+gc_df <- data.frame(Secuencia = names(gc_content), GC = unlist(gc_content))
+colors <- c("#B3CC57", "#ECF081", "#FFBE40", "#EF746F", "#67917A", "#F2D694", "#DCEDC2", "#3D6B7D", "#D9CEB2", "#4ECDC4")
+
+tamanio_gc_df <- data.frame(Secuencia = names(gc_content),
+                            Tamanio = c(sizeB16401, sizeBA2752, sizeBA286, sizeEG51, sizeJN1, sizeXBB191, sizeXBB116, sizeXBB23, sizeZETA, sizeALFA),
+                            GC = unlist(gc_content))
+
+
+# Crear el gráfico de dispersión con colores personalizados y leyenda
+ggplot(tamanio_gc_df, aes(x = Tamanio, y = GC, color = Secuencia)) +
+  geom_point(size = 3) +
+  scale_color_manual(values = colors) +
+  labs(title = "Tamaño vs. Contenido de GC",
+       x = "Tamaño de la secuencia",
+       y = "Contenido de GC (%)",
+       color = "Secuencia") +
+  theme(legend.position = "right")
+
+# Agregar una columna con el color asociado a cada secuencia
+longitudes_df$Color <- factor(longitudes_df$Secuencia, levels = names(gc_content))
+
+ggplot(longitudes_df, aes(x = Secuencia, y = Longitud, fill = Secuencia)) +
+  geom_bar(stat = "identity") +
+  scale_fill_manual(values = colors) +
+  labs(title = "Longitud de las secuencias de ADN",
+       x = "Secuencia",
+       y = "Longitud",
+       fill = "Secuencia") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  geom_text(aes(label = Longitud), vjust = -0.5, size = 3) +
+  scale_color_manual(values = colors) +
+  ylim(0, max(longitudes_df$Longitud) * 1.1)  # Ajustar los límites del eje y para proporcionar más espacio en la parte superior
+
+```
