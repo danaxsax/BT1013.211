@@ -7,14 +7,11 @@ output: pdf_document
 reading files
 
 ```{r, echo = FALSE, include = FALSE}
+
 # libraries needed
-library(Biostrings)
 library(stringi)
 library(seqinr)
 library(ggplot2)
-library(ggrepel)
-library(gplots)
-library(tidyverse)
 
 # reading files
 B16401 <-DNAString(unlist(read.fasta(file="src/B16401.fasta",  as.string = TRUE)))
@@ -77,6 +74,8 @@ complementALFA<-reverseComplement(ALFA)
 
 sequence_names <- c("B16401", "BA2752", "BA286", "EG51", "JN1", "XBB191", "XBB116", "XBB23", "ZETA", "ALFA")
 sequences <- list(B16401 = B16401, BA2752 = BA2752, BA286 = BA286, EG51 = EG51, JN1 = JN1, XBB191 = XBB191, XBB116 = XBB116, XBB23 = XBB23, ZETA = ZETA, ALFA = ALFA)
+colors <- c("#B3CC57", "#ECF081", "#FFBE40", "#EF746F", "#67917A", "#F2D694", "#DCEDC2", "#3D6B7D", "#D9CEB2", "#4ECDC4")
+
 
 for (seq_name in names(sequences)) {
   cat("Secuencia:", seq_name, "\n")
@@ -89,7 +88,6 @@ n_rows <- 3
 n_cols <- 4
 
 par(mfrow = c(n_rows, n_cols))
-
 for (i in 1:length(sequences)) {
   seq_name <- names(sequences)[i]
   seq_length <- length(sequences[[i]])
@@ -105,12 +103,14 @@ for (i in 1:length(sequences)) {
 
 par(mfrow = c(1, 1))
 gc_df <- data.frame(Secuencia = names(gc_content), GC = unlist(gc_content))
-colors <- c("#B3CC57", "#ECF081", "#FFBE40", "#EF746F", "#67917A", "#F2D694", "#DCEDC2", "#3D6B7D", "#D9CEB2", "#4ECDC4")
 
 
 tamanio_gc_df <- data.frame(Secuencia = names(gc_content),
                             Tamanio = c(sizeB16401, sizeBA2752, sizeBA286, sizeEG51, sizeJN1, sizeXBB191, sizeXBB116, sizeXBB23, sizeZETA, sizeALFA),
                             GC = unlist(gc_content))
+
+longitudes_df <- data.frame(Secuencia = names(gc_content),
+                            Longitud = c(sizeB16401, sizeBA2752, sizeBA286, sizeEG51, sizeJN1, sizeXBB191, sizeXBB116, sizeXBB23, sizeZETA, sizeALFA))
 
 ggplot(tamanio_gc_df, aes(x = Tamanio, y = GC, color = Secuencia)) +
   geom_point(size = 3) +
