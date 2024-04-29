@@ -11,8 +11,8 @@ library(ggplot2)
 library(tidyverse)
 
 # Define file names and sequence names
-file_names <- c("B-1-640-1.fasta", "BA-2-75-2.fasta", "BA-2-86.fasta", "EG-5-1.fasta", "JN-1.fasta",
-                "XBB-1-9-1.fasta", "XBB-1-16.fasta", "XBB-2-3.fasta", "ZETA.fasta", "ALFA.fasta")
+file_names <- c("B16401.fasta", "BA2752.fasta", "BA286.fasta", "EG51.fasta", "JN1.fasta",
+                "XBB191.fasta", "XBB116.fasta", "XBB23.fasta", "ZETA.fasta", "ALFA.fasta")
 seq_names <- c("B16401", "BA2752", "BA286", "EG51", "JN1", "XBB191", "XBB116", "XBB23", "ZETA", "ALFA")
 
 # Function to read FASTA file and calculate GC percentage
@@ -33,6 +33,9 @@ gc_content <- sapply(file_names, read_and_calculate_gc)
 
 # Calculate sequence lengths
 sequence_lengths <- sapply(file_names, calculate_sequence_length)
+print(min(sequence_lengths))
+print(max(sequence_lengths))
+
 
 # Create data frame with GC content and sequence lengths
 data <- data.frame(Secuencia = seq_names, Tamanio = sequence_lengths, GC = gc_content)
@@ -45,6 +48,7 @@ for (i in 1:nrow(data)) {
   seq <- data[i, "Secuencia"]
   p <- ggplot(data = data[i, ], aes(x = Tamanio, y = GC)) +
     geom_point() +
+    coord_cartesian(xlim = c(29200, 29900)) +  # Adjust x-axis limits
     labs(title = seq, x = "Tamaño", y = "Contenido de GC (%)") +
     theme_minimal()
   print(p)

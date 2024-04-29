@@ -17,14 +17,14 @@ library(gplots)
 library(tidyverse)
 
 # reading files
-B16401 <-DNAString(unlist(read.fasta(file="src/B-1-640-1.fasta",  as.string = TRUE)))
-BA2752<-DNAString(unlist(read.fasta(file="src/BA-2-75-2.fasta",  as.string = TRUE)))
-BA286<-DNAString(unlist(read.fasta(file="src/BA-2-86.fasta",  as.string = TRUE)))
-EG51<-DNAString(unlist(read.fasta(file="src/EG-5-1.fasta",  as.string = TRUE)))
-JN1<-DNAString(unlist(read.fasta(file="src/JN-1.fasta",  as.string = TRUE)))
-XBB191<-DNAString(unlist(read.fasta(file="src/XBB-1-9-1.fasta",  as.string = TRUE)))
-XBB116<-DNAString(unlist(read.fasta(file="src/XBB-1-16.fasta",  as.string = TRUE)))
-XBB23<-DNAString(unlist(read.fasta(file="src/XBB-2-3.fasta",  as.string = TRUE)))
+B16401 <-DNAString(unlist(read.fasta(file="src/B16401.fasta",  as.string = TRUE)))
+BA2752<-DNAString(unlist(read.fasta(file="src/BA2752.fasta",  as.string = TRUE)))
+BA286<-DNAString(unlist(read.fasta(file="src/BA286.fasta",  as.string = TRUE)))
+EG51<-DNAString(unlist(read.fasta(file="src/EG51.fasta",  as.string = TRUE)))
+JN1<-DNAString(unlist(read.fasta(file="src/JN1.fasta",  as.string = TRUE)))
+XBB191<-DNAString(unlist(read.fasta(file="src/XBB191.fasta",  as.string = TRUE)))
+XBB116<-DNAString(unlist(read.fasta(file="src/XBB116.fasta",  as.string = TRUE)))
+XBB23<-DNAString(unlist(read.fasta(file="src/XBB23.fasta",  as.string = TRUE)))
 ZETA<-DNAString(unlist(read.fasta(file="src/ZETA.fasta",  as.string = TRUE)))
 ALFA<-DNAString(unlist(read.fasta(file="src/ALFA.fasta",  as.string = TRUE)))
 
@@ -63,6 +63,7 @@ gcXBB23<-gc_content[["XBB23"]]
 gcZETA<-gc_content[["ZETA"]]
 gcALFA<-gc_content[["ALFA"]]
 
+
 #get complementary strand
 complementB16401<-reverseComplement(B16401)
 complementBA2752<-reverseComplement(BA2752)
@@ -75,9 +76,46 @@ complementXBB23<-reverseComplement(XBB23)
 complementZETA<-reverseComplement(ZETA)
 complementALFA<-reverseComplement(ALFA)
 
+sequence_names <- c("B16401", "BA2752", "BA286", "EG51", "JN1", "XBB191", "XBB116", "XBB23", "ZETA", "ALFA")
+sequences <- list(B16401 = B16401, BA2752 = BA2752, BA286 = BA286, EG51 = EG51, JN1 = JN1, XBB191 = XBB191, XBB116 = XBB116, XBB23 = XBB23, ZETA = ZETA, ALFA = ALFA)
+
+for (seq_name in names(sequences)) {
+  cat("Secuencia:", seq_name, "\n")
+  cat("Secuencia :\n", as.character(head(sequences[[seq_name]], n = 10)), "\n")
+  cat("Secuencia :\n", as.character(tail(sequences[[seq_name]], n = 10)), "\n\n")
+}
+
+
+n_rows <- 3
+n_cols <- 4
+
+# Establecer el tamaño de la ventana gráfica
+par(mfrow = c(n_rows, n_cols))
+
+# Generar gráficas individuales para cada secuencia
+for (i in 1:length(sequences)) {
+  seq_name <- names(sequences)[i]
+  seq_length <- length(sequences[[i]])
+  gc_percent <- gc_content[[i]]
+  
+  # Crear el título para la gráfica
+  plot_title <- paste("GC% vs. Longitud -", seq_name)
+  
+  # Crear la gráfica
+  plot(seq_length, gc_percent, 
+       xlab = "Longitud de la secuencia", ylab = "GC (%)",
+       main = plot_title, col = colors[i], pch = 16,
+       xlim = c(29200, 29900))
+}
+
+# Restaurar la configuración original de la ventana gráfica
+par(mfrow = c(1, 1))
+
+
 #graphs
 gc_df <- data.frame(Secuencia = names(gc_content), GC = unlist(gc_content))
 colors <- c("#B3CC57", "#ECF081", "#FFBE40", "#EF746F", "#67917A", "#F2D694", "#DCEDC2", "#3D6B7D", "#D9CEB2", "#4ECDC4")
+
 
 tamanio_gc_df <- data.frame(Secuencia = names(gc_content),
                             Tamanio = c(sizeB16401, sizeBA2752, sizeBA286, sizeEG51, sizeJN1, sizeXBB191, sizeXBB116, sizeXBB23, sizeZETA, sizeALFA),
@@ -93,6 +131,7 @@ ggplot(tamanio_gc_df, aes(x = Tamanio, y = GC, color = Secuencia)) +
        y = "Contenido de GC (%)",
        color = "Secuencia") +
   theme(legend.position = "right")
+
 
 # Agregar una columna con el color asociado a cada secuencia
 longitudes_df$Color <- factor(longitudes_df$Secuencia, levels = names(gc_content))
