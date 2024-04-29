@@ -8,7 +8,6 @@ reading files
 
 ```{r, echo = FALSE, include = FALSE}
 # libraries needed
-tinytex::install_tinytex(force = TRUE)
 library(Biostrings)
 library(stringi)
 library(seqinr)
@@ -104,10 +103,7 @@ for (i in 1:length(sequences)) {
        xlim = c(29200, 29900))
 }
 
-
 par(mfrow = c(1, 1))
-
-
 gc_df <- data.frame(Secuencia = names(gc_content), GC = unlist(gc_content))
 colors <- c("#B3CC57", "#ECF081", "#FFBE40", "#EF746F", "#67917A", "#F2D694", "#DCEDC2", "#3D6B7D", "#D9CEB2", "#4ECDC4")
 
