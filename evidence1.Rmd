@@ -9,9 +9,13 @@ reading files
 ```{r, echo = FALSE, include = FALSE}
 
 # libraries needed
+library(Biostrings)
 library(stringi)
 library(seqinr)
 library(ggplot2)
+library(ggrepel)
+library(gplots)
+library(tidyverse)
 
 # reading files
 B16401 <-DNAString(unlist(read.fasta(file="src/B16401.fasta",  as.string = TRUE)))
@@ -36,6 +40,68 @@ sizeXBB116 <- stri_length(XBB116)
 sizeXBB23 <- stri_length(XBB23)
 sizeZETA <- stri_length(ZETA)
 sizeALFA <- stri_length(ALFA)
+
+
+calculate_nucleotide_composition <- function(sequence) {
+  dna_sequence <- DNAString(sequence)
+  nucleotide_count <- letterFrequency(dna_sequence, letters=c("A", "G", "T", "C"))
+  nucleotide_percentage <- nucleotide_count / sum(nucleotide_count) * 100
+  result <- nucleotide_percentage
+  return(result)
+}
+
+sequences <- list(B16401 = B16401, BA2752 = BA2752, BA286 = BA286, EG51 = EG51, JN1 = JN1, XBB191=XBB191, XBB116=XBB116, XBB23=XBB23, ZETA = ZETA, ALFA=ALFA)
+nucleotide_compositions <- lapply(sequences, calculate_nucleotide_composition)
+
+aInB16401 <- nucleotide_compositions[["B16401"]]["A"]
+gInB16401 <- nucleotide_compositions[["B16401"]]["G"]
+tInB16401 <- nucleotide_compositions[["B16401"]]["T"]
+cInB16401 <- nucleotide_compositions[["B16401"]]["C"]
+
+aInBA2752 <- nucleotide_compositions[["BA2752"]]["A"]
+gInBA2752 <- nucleotide_compositions[["BA2752"]]["G"]
+tInBA2752 <- nucleotide_compositions[["BA2752"]]["T"]
+cInBA2752 <- nucleotide_compositions[["BA2752"]]["C"]
+
+aInBA286 <- nucleotide_compositions[["BA286"]]["A"]
+gInBA286 <- nucleotide_compositions[["BA286"]]["G"]
+tInBA286 <- nucleotide_compositions[["BA286"]]["T"]
+cInBA286 <- nucleotide_compositions[["BA286"]]["C"]
+
+aInEG51 <- nucleotide_compositions[["EG51"]]["A"]
+gInEG51 <- nucleotide_compositions[["EG51"]]["G"]
+tInEG51 <- nucleotide_compositions[["EG51"]]["T"]
+cInEG51 <- nucleotide_compositions[["EG51"]]["C"]
+
+aInJN1 <- nucleotide_compositions[["JN1"]]["A"]
+gInJN1 <- nucleotide_compositions[["JN1"]]["G"]
+tInJN1 <- nucleotide_compositions[["JN1"]]["T"]
+cInJN1 <- nucleotide_compositions[["JN1"]]["C"]
+
+aInXBB191 <- nucleotide_compositions[["XBB191"]]["A"]
+gInXBB191 <- nucleotide_compositions[["XBB191"]]["G"]
+tInXBB191 <- nucleotide_compositions[["XBB191"]]["T"]
+cInXBB191 <- nucleotide_compositions[["XBB191"]]["C"]
+
+aInXBB116 <- nucleotide_compositions[["XBB116"]]["A"]
+gInXBB116 <- nucleotide_compositions[["XBB116"]]["G"]
+tInXBB116 <- nucleotide_compositions[["XBB116"]]["T"]
+cInXBB116 <- nucleotide_compositions[["XBB116"]]["C"]
+
+aInXBB23 <- nucleotide_compositions[["XBB23"]]["A"]
+gInXBB23 <- nucleotide_compositions[["XBB23"]]["G"]
+tInXBB23 <- nucleotide_compositions[["XBB23"]]["T"]
+cInXBB23 <- nucleotide_compositions[["XBB23"]]["C"]
+
+aInZETA <- nucleotide_compositions[["ZETA"]]["A"]
+gInZETA <- nucleotide_compositions[["ZETA"]]["G"]
+tInZETA <- nucleotide_compositions[["ZETA"]]["T"]
+cInZETA <- nucleotide_compositions[["ZETA"]]["C"]
+
+aInALFA <- nucleotide_compositions[["ALFA"]]["A"]
+gInALFA <- nucleotide_compositions[["ALFA"]]["G"]
+tInALFA <- nucleotide_compositions[["ALFA"]]["T"]
+cInALFA <- nucleotide_compositions[["ALFA"]]["C"]
 
 #calculate gc %
 gc_content <- function(sequence) {
@@ -73,8 +139,20 @@ complementZETA<-reverseComplement(ZETA)
 complementALFA<-reverseComplement(ALFA)
 
 sequence_names <- c("B16401", "BA2752", "BA286", "EG51", "JN1", "XBB191", "XBB116", "XBB23", "ZETA", "ALFA")
-sequences <- list(B16401 = B16401, BA2752 = BA2752, BA286 = BA286, EG51 = EG51, JN1 = JN1, XBB191 = XBB191, XBB116 = XBB116, XBB23 = XBB23, ZETA = ZETA, ALFA = ALFA)
+
 colors <- c("#B3CC57", "#ECF081", "#FFBE40", "#EF746F", "#67917A", "#F2D694", "#DCEDC2", "#3D6B7D", "#D9CEB2", "#4ECDC4")
+
+
+viruses<-c('B16401', 'BA2752', 'BA286', 'EG51', 'JN1', 'XBB191', 'XBB116', 'XBB23', 'ZETA', 'ALFA')
+size<-c(sizeB16401, sizeBA2752, sizeBA286, sizeEG51, sizeJN1, sizeXBB191, sizeXBB116,  sizeXBB23,sizeZETA, sizeALFA)
+a<-c(aInB16401, aInBA2752, aInBA286, aInEG51, aInJN1, aInXBB191, aInXBB116, aInXBB23, aInZETA, aInALFA)
+c<-c(cInB16401, cInBA2752, cInBA286, cInEG51, cInJN1, cInXBB191, cInXBB116, cInXBB23, cInZETA, cInALFA)
+g<-c(gInB16401, gInBA2752, gInBA286, gInEG51, gInJN1, gInXBB191, gInXBB116, gInXBB23, gInZETA, gInALFA)
+t<-c(tInB16401, tInBA2752, tInBA286, tInEG51, tInJN1, tInXBB191, tInXBB116, tInXBB23, tInZETA, tInALFA)
+gc_percent<-c(gcB16401, gcBA2752, gcBA286,gcEG51, gcJN1, gcXBB191, gcXBB116, gcXBB23, gcZETA, gcALFA )
+complement<-c(complementB16401, complementBA2752, complementBA286, complementEG51, complementJN1, complementXBB191, complementXBB116, complementXBB23, complementZETA, complementALFA)
+df <- data.frame(viruses,size,a,c,g,t, gc_percent)
+print(df)
 
 
 for (seq_name in names(sequences)) {
