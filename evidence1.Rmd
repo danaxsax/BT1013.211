@@ -6,17 +6,17 @@ output: pdf_document
 ---
 reading files
 
-```{r, echo = FALSE, include = FALSE}
+```{r, echo = FALSE, include=FALSE}
 
 # libraries needed
 library(Biostrings)
 library(stringi)
 library(seqinr)
 library(ggplot2)
-library(ggrepel)
 library(gplots)
-library(tidyverse)
+```
 
+```{r, echo = FALSE }
 # reading files
 B16401 <-DNAString(unlist(read.fasta(file="src/B16401.fasta",  as.string = TRUE)))
 BA2752<-DNAString(unlist(read.fasta(file="src/BA2752.fasta",  as.string = TRUE)))
@@ -199,6 +199,12 @@ ggplot(tamanio_gc_df, aes(x = Tamanio, y = GC, color = Secuencia)) +
        color = "Secuencia") +
   theme(legend.position = "right")
 
+print("Como conclusion, puedo decir que la tendencia es que cuan más grande es la secuencia,")
+print("el contendio de GC aumenta, lo cual suena razonable. Sin embargo como toda regla,")
+print("tiene su excepcion como lo arroja la variante XBB.1.9.1  y la variante BA.2.75.2. ")
+print("Aunado a esto, me gustaria recalcar que las variantes VOI tienden a tener una ")
+    print("longitud mayor a las que tienen otra clasificacion asignada por la SIG. ")
+
 ggplot(longitudes_df, aes(x = Secuencia, y = Longitud, fill = Secuencia)) +
   geom_bar(stat = "identity") +
   scale_fill_manual(values = colors) +
@@ -211,8 +217,24 @@ ggplot(longitudes_df, aes(x = Secuencia, y = Longitud, fill = Secuencia)) +
   scale_color_manual(values = colors) +
   coord_cartesian(ylim = c(24000, max(longitudes_df$Longitud) * 1.1), clip = "off")
 
+nucleotide_df <- data.frame(Virus = rep(sequence_names, each = 4),
+                            Nucleotide = rep(c("A", "C", "G", "T"), times = length(sequence_names)),
+                            Frequency = c(a, c, g, t))
 
-print("Como conclusion, puedo decir que la tendencia es que cuan más grande es la secuencia, el contendio de GC aumenta, lo cual suena razonable. Sin embargo como toda regla, tiene su excepcion como lo arroja la variante XBB.1.9.1  y la variante BA.2.75.2. Aunado a esto, me gustaria recalcar que las variantes VOI tienden a tener una longitud mayor a las que tienen otra clasificacion asignada por la SIG. ")
+# Graficar
+ggplot(nucleotide_df, aes(x = Virus, y = Frequency, fill = Nucleotide)) +
+  geom_bar(stat = "identity", position = "stack") +
+  labs(title = "Frecuencia de Nucleótidos por Variante de Virus",
+       x = "Variante de Virus",
+       y = "Frecuencia",
+       fill = "Nucleótido") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_fill_manual(values = c("#FF5733", "#3498DB", "#58D68D", "#F4D03F")) +  
+  geom_text(aes(label = sprintf("%.2f", Frequency)), position = position_stack(vjust = 0.5), size = 3) 
 
+print("Por último, me gustaria agregar que las variables estudiadas ALFA, ZETA ")
 
+print("son en las que debemos enfocarnos mas, estas concuerdan en estar en la clasificacion de VOC,")
+print(" por lo que su alto porcentaje en ")
+print("nucletodidos A puede tener relacion")
 ```
