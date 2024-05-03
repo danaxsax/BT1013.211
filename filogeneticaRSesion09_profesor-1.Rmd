@@ -132,7 +132,8 @@ Cargaremos las sección azul de SARS-COV, MERS-COV y SARS-COV2 con algunas varia
 
 ```{r}
 virus <- c(  "JX869059", "AY508724", "MN908947", "AY390556", "MN985325")
-
+variants<-c("AY508724", "AY485277", "AY390556", "AY278489", "MN908947", "MN985325", "MT292571", "JX869059")
+b<-c('SARS coronavirus NS-1', 'SARS coronavirus Sino1-11','SARS coronavirus GZ02', 'SARS coronavirus GD01', 'Severe acute respiratory syndrome coronavirus 2 isolate Wuhan-Hu-1', 'Severe acute respiratory syndrome coronavirus 2 isolate 2019-nCoV/USA-WA1/2020', 'Severe acute respiratory syndrome coronavirus 2 isolate SARS-CoV-2/human/ESP/Valencia12/2020','Human betacoronavirus 2c EMC/2012')
 ```
 1. Carga las librerías necesarias:
 ```{r}
@@ -150,27 +151,42 @@ library(ggplot2)
 2. Obtén las secuencias:
 ```{r}
 virus_sequences <- read.GenBank(virus)
+variants_sequences<- read.GenBank(variants, seq.names = b,species.names = TRUE)
 ```
 
 3. Estructura del DNABin:
 ```{r}
 str(virus_sequences)
+str(variants_sequences)
 ```
 ```{r}
 attributes(virus_sequences)
 names(virus_sequences)
 attr(virus_sequences, "species")
+
+attributes(variants_sequences)
+names(variants_sequences)
+a<-attr(variants_sequences, "description")
+a
+
 ```
 4. Concentraremos en un archivo todas las secuencias:
 ```{r}
 write.dna(virus_sequences,  file ="virus_seqs.fasta", format = "fasta", append =
 FALSE, nbcol = 6, colsep = " ", colw = 10)
+
+write.dna(variants_sequences,  file ="varian_seqs.fasta", format = "fasta", append =
+FALSE, nbcol = 6, colsep = " ", colw = 10)
+
 ```
 
 5. Cargamos la secuencias:
 ```{r}
 virus_seq_no_alineadas <- readDNAStringSet("virus_seqs.fasta", format = "fasta")
 virus_seq_no_alineadas
+
+variantes_seq_no_alineadas <- readDNAStringSet("varian_seqs.fasta", format = "fasta")
+variantes_seq_no_alineadas
 ```
 6. Alineamiento de las secuencias:
 Un alineamiento múltiple de secuencias es un alineamiento de más de dos secuencias. Estas secuencias, como en el caso de los alieamientos por parejas pueden ser ADN, ARN o proteína.
@@ -233,14 +249,14 @@ title("SARS_COV2")
 
 
 ```{r}
-ggtree(virus_plot)
-ggtree(virus_plot, layout="slanted") 
-ggtree(virus_plot, layout="circular")
-ggtree(virus_plot, layout="fan", open.angle=120)
-ggtree(virus_plot, layout="equal_angle")
-ggtree(virus_plot, branch.length='none')
-ggtree(virus_plot, branch.length='none', layout='circular')
-ggtree(virus_plot ) + geom_tiplab()
+ggtree(virus_plot_filogenetico)
+ggtree(virus_plot_filogenetico, layout="slanted") 
+ggtree(virus_plot_filogenetico, layout="circular")
+ggtree(virus_plot_filogenetico, layout="fan", open.angle=120)
+ggtree(virus_plot_filogenetico, layout="equal_angle")
+ggtree(virus_plot_filogenetico, branch.length='none')
+ggtree(virus_plot_filogenetico, branch.length='none', layout='circular')
+ggtree(virus_plot_filogenetico ) + geom_tiplab(text=)
 
 ```
 15. Visualiza el alineamiento de las secuencias:
