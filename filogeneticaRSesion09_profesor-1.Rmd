@@ -1,7 +1,7 @@
 ---
 title: "Filogenética con R"
-author: 'Profesor: R Computación'
-date: "2/19/2020"
+author: 'Profesor: R Computación y modifiaciones de Cyrce Danae Salinas'
+date: "3/05/2024"
 output: html_document
 ---
 
@@ -282,6 +282,14 @@ citation("packagename")
 ```{r}
 citation("dplyr")
 citation("ggplot2")
+citation("seqinr")
+citation("adegenet")
+citation("ape")
+citation("ggtree")
+citation("DECIPHER")
+citation("viridis")
+citation("phytools")
+citation("geiger")
 
 ```
 
