@@ -7,10 +7,14 @@ output: pdf_document
 reading files
 
 ```{r, echo = FALSE, include = FALSE}
+#if (!require("BiocManager", quietly = TRUE))
+#    install.packages("BiocManager")
 
+#BiocManager::install("Biostrings")
 # libraries needed
 library(Biostrings)
 library(stringi)
+library(Biostrings)
 library(seqinr)
 library(ggplot2)
 library(ggrepel)
@@ -199,6 +203,7 @@ ggplot(tamanio_gc_df, aes(x = Tamanio, y = GC, color = Secuencia)) +
        color = "Secuencia") +
   theme(legend.position = "right")
 
+# Plot length of DNA sequences
 ggplot(longitudes_df, aes(x = Secuencia, y = Longitud, fill = Secuencia)) +
   geom_bar(stat = "identity") +
   scale_fill_manual(values = colors) +
