@@ -1,0 +1,49 @@
+---
+title: "ev02"
+author: "Ernesto De Luna Quintero A01384008"
+date: "2024-05-02"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+##Link del video: https://youtu.be/SbZh9kICGXU
+
+```{r cars}
+library(ape) 
+library(Biostrings) 
+
+virus <- c("SARS-CoV-2", "MERS-CoV", "SARS-CoV", "HCoV-OC43", "HCoV-229E", "HCoV-NL63", "HCoV-HKU1", "RaTG13", "BtKY72", "WIV1", "PDCoV", "HCoV-HKU9", "HCoV-EMC", "HKU4-1", "HKU5-1", "HKU8-1", "HCoV-229E-related", "HCoV-NL63-related", "HCoV-OC43-related", "HKU1-related")
+codigos_acceso <- c("MN908947", "NC_019843", "NC_004718", "NC_006213", "NC_002645", "NC_005831", "NC_006577", "MN996532", "MK211376", "MG772934", "KT446369", "EF065505", "JX869059", "FJ376622", "FJ376624", "NC_006577", "EF065505", "EF065505", "EF065505", "EF065505")
+
+fasta_urls <- paste0("https://www.ncbi.nlm.nih.gov/sviewer/viewer.fcgi?id=", codigos_acceso, "&db=nuccore&report=fasta")
+
+secuencias <- readDNAStringSet(fasta_urls, format = "fasta")
+longitudes <- width(secuencias)
+
+barplot(longitudes, names.arg = virus, ylab = "Longitud de secuencia (número de bases)", xlab = "Virus", col = "skyblue")
+
+min_length <- min(longitudes)
+secuencias_recortadas <- narrow(secuencias, start = 1, width = min_length)
+
+secuencias_dna_bin <- as.DNAbin(secuencias_recortadas)
+
+distancias <- dist.dna(secuencias_dna_bin, model = "JC")
+
+arbol_filogenetico <- njs(distancias)
+
+plot(arbol_filogenetico, main = "Árbol filogenético de especies de coronavirus", cex = 0.8, ignore.branch.length = TRUE)
+
+```
+
+##La primera grafica comparan el número de bases o longitudes de secuencia. Cada barra representa cada especie del virus en el orden en el que aparecen en el codigo.
+
+##La segunda grafica representa el arbol filogenetico de los tipos de Sars-CoV que se encuentran en las disntintas especies ademas de los humanos. La linea base representa el virus original y las ramas son los diferentes subtipos en los que se pueden dividir estas especies del virus.
+
+##Referencias: Vargas-Lara, A. K., Schreiber-Vellnagel, V., Ochoa-Hein, E., & López-Ávila, A. (2020).SARS-CoV-2: una revisión bibliográfica de los temas más relevantes y evolución del conocimiento médico sobre la enfermedad. Neumología y cirugía de tórax, 79(3)https://www.scielo.org.mx/scielo.php?script=sci_arttext&pid=S0028-37462020000300185      
+
+///  Gómez Meléndez, A. (2022). Coronavirus SARS-Cov2 y Covid-19: El virus y la enfermedad que detuvieron al mundo. Relaciones Internacionales, 95(2)https://www.scielo.sa.cr/scielo.php?script=sci_arttext&pid=S2215-45822022000200009     
+
+///    Organización Mundial de la Salud (2020). Situación de la vigilancia ambiental del SARS-CoV-2 https://iris.who.int/bitstream/handle/10665/333862/WHO-2019-nCoV-Sci_Brief-EnvironmentalSampling-2020.1-spa.pdf?sequence=1
