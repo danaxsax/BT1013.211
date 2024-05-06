@@ -1489,7 +1489,7 @@ aacagcacaa gtaggtttag ttaactttaa tctcacatag caatctttaa tcaatgtgta
 acattaggga ggacttgaaa gagccaccac attttcatcg aggccacgcg gagtacgatc
 gagggtacag tgaataatgc tagggagagc tgcctatatg gaagagccct aatgtgtaaa
 attaatttta gtagtgctat ccccatgtga ttttaatagc ttcttaggag aatgacaaaa
->SARS_coronavirus_GD01
+>SARS_coronavirus GD01
 tacccaggaa aagccaacca acctcgatct cttgtagatc tgttctctaa acgaacttta
 aaatctgtgt agctgtcgct cggctgcatg cctagtgcac ctacgcagta taaacaataa
 taaattttac tgtcgttgac aagaaacgag taactcgtcc ctcttctgca gactgcttac
@@ -1986,7 +1986,7 @@ ttagttaact ttaatctcac atagcaatct ttaatcaatg tgtaacatta gggaggactt
 gaaagagcca ccacattttc atcgaggcca cgcggagtac gatcgagggt acagtgaata
 atgctaggga gagctgccta tatggaagag ccctaatgtg taaaattaat tttagtagtg
 ctatccccat gtgattttaa tagcttctta ggagaatgac aaaaaaaaaa aaaaaaa
->SARSCO_2_Wuhan-Hu-1
+>SARSCO2_Wuhan-Hu-1
 attaaaggtt tataccttcc caggtaacaa accaaccaac tttcgatctc ttgtagatct
 gttctctaaa cgaactttaa aatctgtgtg gctgtcactc ggctgcatgc ttagtgcact
 cacgcagtat aattaataac taattactgt cgttgacagg acacgagtaa ctcgtctatc
@@ -2486,7 +2486,7 @@ gggaggactt gaaagagcca ccacattttc accgaggcca cgcggagtac gatcgagtgt
 acagtgaaca atgctaggga gagctgccta tatggaagag ccctaatgtg taaaattaat
 tttagtagtg ctatccccat gtgattttaa tagcttctta ggagaatgac aaaaaaaaaa
 aaaaaaaaaa aaaaaaaaaa aaa
->SARSCO_2_USA-2020
+>SARSCO2_USA-WA1/2020
 attaaaggtt tataccttcc caggtaacaa accaaccaac tttcgatctc ttgtagatct
 gttctctaaa cgaactttaa aatctgtgtg gctgtcactc ggctgcatgc ttagtgcact
 cacgcagtat aattaataac taattactgt cgttgacagg acacgagtaa ctcgtctatc
@@ -2986,7 +2986,7 @@ gggaggactt gaaagagcca ccacattttc accgaggcca cgcggagtac gatcgagtgt
 acagtgaaca atgctaggga gagctgccta tatggaagag ccctaatgtg taaaattaat
 tttagtagtg ctatccccat gtgattttaa tagcttctta ggagaatgac aaaaaaaaaa
 aa
->SARSCO_2_Espania_Valencia_2020
+>SARSCO2_Espania_Valencia_2020
 agatctgttc tctaaacgaa ctttaaaatc tgtgtggctg tcactcggct gcatgcttag
 tgcactcacg cagtataatt aataactaat tactgtcgtt gacaggacac gagtaactcg
 tctatcttct gcaggctgct tacggtttcg tccgtgttgc agccgatcat cagcacatct
@@ -3484,7 +3484,7 @@ catagcacaa gtagatgtag ttaactttaa tctcacatag caatctttaa tcagtgtgta
 acattaggga ggacttgaaa gagccaccac attttcaccg aggccacgcg gagtacgatc
 gagtgtacag tgaacaatgc tagggagagc tgcctatatg gaagagccct aatgtgtaaa
 attaatttta gtagtgctat cc
->Human_betacoronavirus_2_EMC-2012
+>Human_betacoronavirus_2012
 gatttaagtg aatagcttgg ctatctcact tcccctcgtt ctcttgcaga actttgattt
 taacgaactt aaataaaagc cctgttgttt agcgtatcgt tgcacttgtc tggtgggatt
 gtggcattaa tttgcctgct catctaggca gtggacatat gctcaacact gggtataatt

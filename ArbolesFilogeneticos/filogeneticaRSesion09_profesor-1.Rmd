@@ -133,7 +133,7 @@ Cargaremos las sección azul de SARS-COV, MERS-COV y SARS-COV2 con algunas varia
 ```{r}
 virus <- c(  "JX869059", "AY508724", "MN908947", "AY390556", "MN985325")
 variants<-c("AY508724", "AY485277", "AY390556", "AY278489", "MN908947", "MN985325", "MT292571", "JX869059")
-b<-c('SARS coronavirus NS-1', 'SARS coronavirus Sino1-11','SARS coronavirus GZ02', 'SARS coronavirus GD01', 'Severe acute respiratory syndrome coronavirus 2 isolate Wuhan-Hu-1', 'Severe acute respiratory syndrome coronavirus 2 isolate 2019-nCoV/USA-WA1/2020', 'Severe acute respiratory syndrome coronavirus 2 isolate SARS-CoV-2/human/ESP/Valencia12/2020','Human betacoronavirus 2c EMC/2012')
+b<-c('SARS_coronavirus_NS-1', 'SARS_coronavirus_Sino1-11','SARS_coronavirus_GZ02', 'SARS_coronavirus GD01', 'SARSCO2_Wuhan-Hu-1', 'SARSCO2_USA-WA1/2020', 'SARSCO2_Espania_Valencia_2020','Human_betacoronavirus_2012')
 ```
 1. Carga las librerías necesarias:
 ```{r}
@@ -151,7 +151,8 @@ library(ggplot2)
 2. Obtén las secuencias:
 ```{r}
 virus_sequences <- read.GenBank(virus)
-variants_sequences<- read.GenBank(variants, seq.names = b,species.names = TRUE)
+variants_sequences<- read.GenBank(variants)
+names(variants_sequences)<-b
 ```
 
 3. Estructura del DNABin:
@@ -167,7 +168,6 @@ attr(virus_sequences, "species")
 attributes(variants_sequences)
 names(variants_sequences)
 a<-attr(variants_sequences, "description")
-a
 
 ```
 4. Concentraremos en un archivo todas las secuencias:
@@ -175,7 +175,7 @@ a
 write.dna(virus_sequences,  file ="virus_seqs.fasta", format = "fasta", append =
 FALSE, nbcol = 6, colsep = " ", colw = 10)
 
-write.dna(variants_sequences,  file ="varian_seqs.fasta", format = "fasta", append =
+write.dna(variants_sequences,  file ="src/varian_seqs.fasta", format = "fasta", append =
 FALSE, nbcol = 6, colsep = " ", colw = 10)
 
 ```
@@ -185,7 +185,7 @@ FALSE, nbcol = 6, colsep = " ", colw = 10)
 virus_seq_no_alineadas <- readDNAStringSet("virus_seqs.fasta", format = "fasta")
 virus_seq_no_alineadas
 
-variantes_seq_no_alineadas <- readDNAStringSet("varian_seqs.fasta", format = "fasta")
+variantes_seq_no_alineadas <- readDNAStringSet("src/varian_seqs.fasta", format = "fasta")
 variantes_seq_no_alineadas
 ```
 6. Alineamiento de las secuencias:
@@ -199,9 +199,9 @@ En todos los casos los algoritmos de alineamiento múltiple asumen que las secue
 ![Alineamiento](bokeh_seq_align.png)
 
 ```{r}
-virus_seq_no_alineadas <- OrientNucleotides(virus_seq_no_alineadas)
+variantes_seq_no_alineadas <- OrientNucleotides(variantes_seq_no_alineadas)
 
-virus_align_seqs <- AlignSeqs(virus_seq_no_alineadas)
+virus_align_seqs <- AlignSeqs(variantes_seq_no_alineadas)
 ```
 7. Visualizar el resultado del alineamiento:
 ```{r}
@@ -210,12 +210,12 @@ BrowseSeqs(virus_align_seqs, highlight=0)
 
 8. Guardar el resultado:
 ```{r}
-writeXStringSet(virus_align_seqs, file = "virus_align_seq.fasta")
+writeXStringSet(virus_align_seqs, file = "src/virus_align_seq.fasta")
 ```
 
 9. Obtener el nuevo archivo:
 ```{r}
-virus_aligned <- read.alignment("virus_align_seq.fasta", format = "fasta") 
+virus_aligned <- read.alignment("src/virus_align_seq.fasta", format = "fasta") 
 virus_aligned
 ```
 
@@ -256,7 +256,7 @@ ggtree(virus_plot_filogenetico, layout="fan", open.angle=120)
 ggtree(virus_plot_filogenetico, layout="equal_angle")
 ggtree(virus_plot_filogenetico, branch.length='none')
 ggtree(virus_plot_filogenetico, branch.length='none', layout='circular')
-ggtree(virus_plot_filogenetico ) + geom_tiplab(text=)
+ggtree(virus_plot_filogenetico ) + geom_tiplab()
 
 ```
 15. Visualiza el alineamiento de las secuencias:
