@@ -1,10 +1,9 @@
 ---
-title: "Proyecto integrador
-author: 'Cyrce Danae Salinas'
-date: "3/05/2024"
-output: pdf
+title: "Proyecto integrador"
+author: Cyrce Danae Salinas
+date: May, 6, 2024
+output: pdf_document
 ---
-paquetes necesarios
 
 ```
 packageVersion("ape")
@@ -18,6 +17,18 @@ De las siguientes tres opciones, selecciona una opción para investigar: [10 pts
 -Analizar las secuencias de SARS-CoV-2 reportadas en los 20 países con más casos reportados. Y puedes tratar de responder a la pregunta: ¿Son muy diferentes las variantes entre cada país? ¿Es diferente el SARS-CoV-2 entre las diferentes poblaciones: Asiática, Hispana, Europea o Africana?
 
 ```{r}
+tinytex::install_tinytex()
+
+library(Biostrings)
+library(seqinr)
+library(adegenet)
+library(ape)
+library(ggtree)
+library(DECIPHER)
+library(viridis)
+library(ggplot2)
+
+
 variants<-c('OU357137', 'OR915534', 'PP357634', 'MT394864', 'MZ264787', 'BS005473', 'PP584657', 'OU471383', 'OY707335', 'MT635445','OR073431', 'OU014289', 'ON532638','PP425377','MW692797','MW553297','LR877734','MW884227','MT889692','MZ570448')
 origin<-c('EEUU', 'India', 'Francia', 'Alemania', 'Brasil', 'Japon', 'CoreaSur', 'Italia', 'ReinoUnido', 'Rusia', 'Turquia', 'Espana', 'Austria', 'Vietnam','Taiwan','Argentina','PaisesBajos','Mexico','Iran','Indonesia')
 
@@ -37,7 +48,7 @@ FALSE, nbcol = 6, colsep = " ", colw = 10)
 sizes <- numeric(length(origin))
 
 for (i in 1:length(origin)) {
-  sizes[i] <- nchar(sequences[i])
+  sizes[i] <- nchar(variants_sequences[i])
 }
 
 names(sizes) <- origin
