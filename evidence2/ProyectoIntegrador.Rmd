@@ -16,9 +16,7 @@ Realiza lo siguiente en un script de R y código:
 De las siguientes tres opciones, selecciona una opción para investigar: [10 pts]
 -Analizar las secuencias de SARS-CoV-2 reportadas en los 20 países con más casos reportados. Y puedes tratar de responder a la pregunta: ¿Son muy diferentes las variantes entre cada país? ¿Es diferente el SARS-CoV-2 entre las diferentes poblaciones: Asiática, Hispana, Europea o Africana?
 
-```{r}
-tinytex::install_tinytex()
-
+```{r, include = FALSE}
 library(Biostrings)
 library(seqinr)
 library(adegenet)
@@ -27,24 +25,20 @@ library(ggtree)
 library(DECIPHER)
 library(viridis)
 library(ggplot2)
-
-
 variants<-c('OU357137', 'OR915534', 'PP357634', 'MT394864', 'MZ264787', 'BS005473', 'PP584657', 'OU471383', 'OY707335', 'MT635445','OR073431', 'OU014289', 'ON532638','PP425377','MW692797','MW553297','LR877734','MW884227','MT889692','MZ570448')
 origin<-c('EEUU', 'India', 'Francia', 'Alemania', 'Brasil', 'Japon', 'CoreaSur', 'Italia', 'ReinoUnido', 'Rusia', 'Turquia', 'Espana', 'Austria', 'Vietnam','Taiwan','Argentina','PaisesBajos','Mexico','Iran','Indonesia')
 
 variants_sequences<- read.GenBank(variants)
 names(variants_sequences)<-origin
-
 attributes(variants_sequences)
-names(variants_sequences)
-attr(variants_sequences, "description")
 
 write.dna(variants_sequences,  file ="variants_seqs.fasta", format = "fasta", append =
 FALSE, nbcol = 6, colsep = " ", colw = 10)
 ```
 
+
 1. Calcula la longitud de las secuencias que incluyas. [5 pts]
-```{r}
+```{r, include = FALSE}
 sizes <- numeric(length(origin))
 
 for (i in 1:length(origin)) {
@@ -52,12 +46,14 @@ for (i in 1:length(origin)) {
 }
 
 names(sizes) <- origin
-sizes
+variantes_seq_no_alineadas <- readDNAStringSet("variants_seqs.fasta", format = "fasta")
 ```
-
-2. Crea una primera gráfica donde se comparen el número de bases de ADN que componen todas las variantes del virus. [7 pts]
 ```{r}
-
+sizes
+variantes_seq_no_alineadas
+```
+2. Crea una primera gráfica donde se comparen el número de bases de ADN que componen todas las variantes del virus. [7 pts]
+```{r, include = FALSE}
 sequences <- readDNAStringSet("variants_seqs.fasta", format = "fasta")
 bases <- c("A", "C", "G", "T")
 base_counts <- lapply(sequences, letterFrequency, letters=bases)
@@ -73,7 +69,8 @@ base_matrix <- matrix(0, nrow = length(sequences), ncol = length(base_names),
 for (i in seq_along(sequences)) {
   base_matrix[i, ] <- unname(base_counts[[i]])
 }
-
+```
+```{r}
 barplot(t(base_matrix), beside = TRUE, 
         main = "Número de Bases de ADN por Variante",
         xlab = "Variantes",
@@ -85,12 +82,10 @@ barplot(t(base_matrix), beside = TRUE,
         las=2)
 ```
 En este gráfico se nos muestra que, en general, las variantes tienen en promedio el mismo número de bases (a excepción de la variante encontrada en Indonesia). Esto debido a que estamos estudiando el mismo tipo de virus, el SARS-CoV-2. 
-En específico, estas secuencias tienen un bajo contenido de citosina y guanina, por lo que las hebras pueden separarse más fácilmente, lo que facilita la replicación del virus porque no requieren de tanta energía para la separacion de hebras.
-
-La visualización de estos datos, ayuda al entendimiento de la similitud entre variantes y permite un mayor entendimiento de estas.
+Al comparar la cantidad de bases que componen a los virus, podemos decir que estas secuencias tienen un bajo contenido de citosina y guanina, por lo que las hebras pueden separarse más fácilmente, lo que hace facil la replicación del virus porque no requieren de tanta energía para la separacion de hebras. La visualización de las bases que componen sequencias, ayuda al entendimiento de la similitud entre variantes y permite un mayor entendimiento de estas.
 
 3. Crea una segunda gráfica donde se muestre el árbol filogenético obtenido de las secuencias que se seleccionaron para estudiar. [8 pts]
-```{r}
+```{r, include=FALSE}
 variantes_seq_no_alineadas <- readDNAStringSet("variants_seqs.fasta", format = "fasta")
 variantes_seq_no_alineadas <- OrientNucleotides(variantes_seq_no_alineadas)
 variantes_align_seqs <- AlignSeqs(variantes_seq_no_alineadas)
@@ -99,6 +94,9 @@ variantes_aligned <- read.alignment("variantes_align_seq.fasta", format = "fasta
 matriz_distanciaV <- dist.alignment(variantes_aligned, matrix = "similarity")
 varian_filogenetico <- njs(matriz_distanciaV)
 varian_plot_filogenetico <- ladderize(varian_filogenetico)
+
+```
+```{r}
 ggtree(varian_plot_filogenetico, branch.length='none') + geom_tiplab(text=element_text(size=3)) + xlim(0, 13)
 
 ```
@@ -107,14 +105,16 @@ ggtree(varian_plot_filogenetico, branch.length='none') + geom_tiplab(text=elemen
 
 En este arbol, se ilustra como todos los virus son decendientes de un mismo ancestro. 
 Puedo ver que en las secuencias que Italia y Alemania están en la misma rama, por lo que puedo concluir que estas son similares. Además, un sustento para mi argumento es que están muy cerca un país de otro, geográficamente hablando.
-Mismo caso en cuanto a Vietnam y Corea del Sur; sin embargo, en este caso no están tan juntos, se encuentran en una misma rama y sus secuencias presentan similitudes.
+Mismo caso en cuanto a Vietnam y Corea del Sur; sin embargo, en este caso no están tan cerca, se encuentran en una misma rama y sus secuencias presentan similitudes.
 
 Los filogramas permiten visualizar las relaciones evolutivas entre organismos; sin embargo, es importante recalcar que estos son únicamente una hipótesis. Hay que considerar también factores de morfología, registros paleontológicos, etc. 
 
 Recuerda incluir tus datos personales y las referencias bibliográficas de tu investigación.
 5. Sube tu entregable a la plataforma en el formato indicado. Recuerda incluir la liga de tu video en el script.
 Liga del video: 
-
+```{r}
+print("https://youtu.be/b4KTy6hpv6c?si=cmRK376QJeZLHlMQ")
+```
 Referencias de paquetes
 
 ```{r}
